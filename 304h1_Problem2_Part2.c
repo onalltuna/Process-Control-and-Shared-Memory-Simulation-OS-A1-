@@ -47,7 +47,6 @@ int main()
 
         // child creation with fork
         pids[i] = fork();
-
         if (pids[i] > 0)
         {
         }
@@ -60,6 +59,7 @@ int main()
             printf("First Child: Input %d , Output = PID %d * %d\n", readNumber1, getpid(), readNumber1);
             // modify the input, store it in output1 and send it with the second pipe
             int outputt1 = getpid() * readNumber1;
+            sleep(20);
             write(fd[1][1], &outputt1, sizeof(outputt1));
             kill(getpid(), SIGTERM);
         }
@@ -70,6 +70,7 @@ int main()
             close(fd[0][1]);
             read(fd[0][0], &readNumber2, sizeof(readNumber2));
             printf("Second Child: Input %d , Output = PID %d / %d \n", readNumber2, getpid(), readNumber2);
+            sleep(20);
             // modify the input, store it in output2 and send it with the third pipe
             int output2 = (int)(getpid() / readNumber2);
             write(fd[2][1], &output2, sizeof(output2));
@@ -79,6 +80,7 @@ int main()
     // case for the parent
     if (getpid() > 0)
     {
+
         // read from second and third pipe and print the sum of the inputs read from the pipes
         close(fd[1][1]);
         close(fd[2][1]);
